@@ -15,6 +15,7 @@ layout('layouts.guest');
 state([
     'name' => '',
     'email' => '',
+    'phone' => '',
     'password' => '',
     'password_confirmation' => ''
 ]);
