@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\WelcomeEmail;
 
 class AuthController extends Controller
 {
@@ -35,6 +37,14 @@ class AuthController extends Controller
             'phone' => $request->phone,
             // Add other fields as necessary
         ]);
+
+        // Send welcome email
+        try {
+            Mail::to($customer->email)->send(new WelcomeEmail($customer));
+        } catch (\Exception $e) {
+            // Log the error but don't stop the registration process
+            \Log::error('Failed to send welcome email: ' . $e->getMessage());
+        }
 
         return response()->json([
             'status' => true,
@@ -72,6 +82,8 @@ class AuthController extends Controller
         }
 
         $can = "Customer";
+        $customer->is_online = "1";
+        $customer->save();
         $token = $customer->createToken('customerAuthToken', [$can])->plainTextToken;
 
         return response()->json([
