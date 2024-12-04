@@ -16,6 +16,8 @@ Route::prefix('customers')->group(function () {
         Route::post('/password/forgot', '\App\Http\Controllers\Api\AuthController@sendResetLinkEmail');
         Route::post('/password/reset', '\App\Http\Controllers\Api\AuthController@reset');
 
+        Route::middleware('auth:sanctum')->post('/logout', '\App\Http\Controllers\Api\AuthController@logout');
+
         // Adding profile routes
         Route::prefix('profile')->middleware('auth:sanctum')->group(function () {
             Route::get('/', '\App\Http\Controllers\Api\AuthController@getProfile');

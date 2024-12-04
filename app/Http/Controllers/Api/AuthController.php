@@ -93,6 +93,19 @@ class AuthController extends Controller
         ], 200);
     }
 
+    public function logout(Request $request)
+    {
+        $request->user()->currentAccessToken()->delete();
+
+        $request->user()->is_online = "0";
+        $request->user()->save();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Logged out successfully'
+        ], 200);
+    }
+
     public function sendResetLinkEmail(Request $request)
     {
         // Validate the request
