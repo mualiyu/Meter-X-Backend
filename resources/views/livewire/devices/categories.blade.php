@@ -18,6 +18,11 @@ $devices = state('devices', Device::where('status', '=', 'in_stock')->orderBy('c
 
 $updateActionState = function ($action) {
     $this->action = $action;
+
+    $this->available_d =  Device::where('status', '=', 'in_stock')->orderBy('created_at', 'DESC')->get();
+    $this->sold_d = Device::where('status', '=', 'purchased')->orderBy('created_at', 'DESC')->get();
+    $this->online_d = Device::where('is_online', '=', '1')->orderBy('created_at', 'DESC')->get();
+
     // Update the devices variable based on the action
     if ($action === "available") {
         $this->devices = Device::where('status', '=', 'in_stock')->orderBy('created_at', 'DESC')->get();
@@ -31,46 +36,43 @@ $updateActionState = function ($action) {
     // Log::alert($this->devices);
 };
 
-$device_name = state('device_name', '');
-$meter_id = state('meter_id', 'MX_' . bin2hex(random_bytes(16)));
+$name = state('name', '');
+$device_id = state('device_id', 'MX_' . bin2hex(random_bytes(16)));
+$production_date = state('production_date', '');
 // $is_online = state('is_online', false);
 $status = state('status', '');
 $type = state('type', '');
 $price = state('price', '');
-$stock_status = state('stock_status', '');
 
 $createDevice = function () {
     // Validate the input data
     $this->validate([
-        'device_name' => 'required|string|max:255',
-        'meter_id' => 'required|string|max:255',
-        // 'is_online' => 'required|boolean',
+        'name' => 'required|string|max:255',
+        'device_id' => 'required|string|max:255',
+        'production_date' => 'required|date',
         'status' => 'required|string',
         'type' => 'required|string',
         'price' => 'required|numeric|min:0',
-        'stock_status' => 'required|string',
     ]);
 
     // Create a new device record
     Device::create([
-        'device_name' => $this->device_name,
-        'meter_id' => $this->meter_id,
-        // 'is_online' => $this->is_online,
+        'name' => $this->name,
+        'device_id' => $this->device_id,
+        'production_date' => $this->production_date,
         'status' => $this->status,
         'type' => $this->type,
         'price' => $this->price,
-        'stock_status' => $this->stock_status,
     ]);
 
     // Optionally reset the form fields
     $this->reset([
-        'device_name',
-        'meter_id',
-        // 'is_online',
+        'name',
+        'device_id',
+        'production_date',
         'status',
         'type',
         'price',
-        'stock_status',
     ]);
 
     // Optionally dispatch an event or show a success message
@@ -84,7 +86,7 @@ $createDevice = function () {
 
 ?>
 
-<div>
+<div wire:poll.2000ms="updateActionState('{{$action}}')">
     {{-- @if (session()->has('message'))
     <div class="alert alert-success mb-5">
         {{ session('message') }}
@@ -152,35 +154,33 @@ $createDevice = function () {
 
         <div class="mt-6 w-100 p-4 flex flex-row justify-between">
             <div class="w-1/2 mr-4">
-                <label for="device_name" class="block text-sm font-medium text-gray-700">{{ __('Device Name')
+                <label for="name" class="block text-sm font-medium text-gray-700">{{ __('Device Name')
                     }}</label>
-                <input wire:model="device_name" id="device_name" name="device_name" type="text"
+                <input wire:model="name" id="name" name="name" type="text"
                     class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                     placeholder="{{ __('Device Name') }}" />
-                <x-input-error :messages="$errors->get('device_name')" class="mt-2" />
+                <x-input-error :messages="$errors->get('name')" class="mt-2" />
             </div>
             <div class="w-1/2 ml-4">
-                <label for="meter_id" class="block text-sm font-medium text-gray-700">{{ __('Meter ID') }}</label>
-                <input wire:model="meter_id" id="meter_id" disabled @disabled(true) name="meter_id" type="text"
+                <label for="device_id" class="block text-sm font-medium text-gray-700">{{ __('Device ID') }}</label>
+                <input wire:model="device_id" id="device_id" disabled @disabled(true) name="device_id" type="text"
                     class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                    placeholder="{{ __('Meter ID') }}" />
-                    <input type="hidden" wire:click="meter_id">
-                <x-input-error :messages="$errors->get('meter_id')" class="mt-2" />
+                    placeholder="{{ __('Device ID') }}" />
+                    <input type="hidden" wire:click="device_id">
+                <x-input-error :messages="$errors->get('device_id')" class="mt-2" />
             </div>
         </div>
 
-        {{-- <div class="mt-6 p-4">
-            <label for="is_online" class="block text-sm font-medium text-gray-700">{{ __('Is Online') }}</label>
-            <select wire:model="is_online" id="is_online"
-                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                <option value="0">{{ __('No') }}</option>
-                <option value="1">{{ __('Yes') }}</option>
-            </select>
-            <x-input-error :messages="$errors->get('is_online')" class="mt-2" />
-        </div> --}}
-
-        <div class="mt-6 p-4 flex flex-row justify-between">
+        <div class="mt-6 w-100 p-4 flex flex-row justify-between">
             <div class="w-1/2 mr-4">
+                <label for="production_date" class="block text-sm font-medium text-gray-700">{{ __('Production Date') }}</label>
+                <input wire:model="production_date" id="production_date" name="production_date" type="date"
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                    placeholder="{{ __('Production Date') }}" />
+                <x-input-error :messages="$errors->get('production_date')" class="mt-2" />
+            </div>
+
+            <div class="w-1/2 ml-4">
                 <label for="status" class="block text-sm font-medium text-gray-700">{{ __('Status') }}</label>
                 <select wire:model="status" id="status"
                     class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
@@ -191,7 +191,11 @@ $createDevice = function () {
                 </select>
                 <x-input-error :messages="$errors->get('status')" class="mt-2" />
             </div>
-            <div class="w-1/2 ml-4">
+        </div>
+
+        <div class="mt-6 p-4 flex flex-row justify-between">
+
+            <div class="w-1/2 mr-4">
                 <label for="type" class="block text-sm font-medium text-gray-700">{{ __('Type') }}</label>
                 <select wire:model="type" id="type"
                     class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
@@ -201,26 +205,13 @@ $createDevice = function () {
                 </select>
                 <x-input-error :messages="$errors->get('type')" class="mt-2" />
             </div>
-        </div>
 
-        <div class="mt-6 p-4 flex flex-row justify-between">
-            <div class="w-1/2 mr-4">
+            <div class="w-1/2 ml-4">
                 <label for="price" class="block text-sm font-medium text-gray-700">{{ __('Price') }}</label>
                 <input wire:model="price" id="price" name="price" type="number" step="0.01"
                     class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                     placeholder="{{ __('Price') }}" />
                 <x-input-error :messages="$errors->get('price')" class="mt-2" />
-            </div>
-            <div class="w-1/2 ml-4">
-                <label for="stock_status" class="block text-sm font-medium text-gray-700">{{ __('Stock Status')
-                    }}</label>
-                <select wire:model="stock_status" id="stock_status"
-                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                    <option>{{ __('Select Stock') }}</option>
-                    <option value="available" selected>{{ __('Available') }}</option>
-                    <option value="sold">{{ __('Sold') }}</option>
-                </select>
-                <x-input-error :messages="$errors->get('stock_status')" class="mt-2" />
             </div>
         </div>
 
@@ -276,4 +267,3 @@ $createDevice = function () {
         @endif
         {{-- , key($devices[0]->id) --}}
 </div>
-

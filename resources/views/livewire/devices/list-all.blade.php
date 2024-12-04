@@ -21,13 +21,13 @@ state('showDetail', false);
 // $price = state('price', '');
 // $stock_status = state('stock_status', '');
 
-state('device_name', '');
-state('meter_id', '');
+state('name', '');
+state('device_id', '');
 state('status', '');
 state('type', '');
 state('price', '');
-state('stock_status', '');
-state('device_id', '');
+state('device_idd', '');
+state('production_date', '');
 
 // delete confirmation
 $delete_confirmation = state('delete_confirmation', '');
@@ -38,13 +38,13 @@ $showDeviceDetail =  function ($deviceId) {
         // Fetch the device details based on the selected device ID
         $this->selectedDevice = Device::find($deviceId);
 
-        $this->device_name = $this->selectedDevice->device_name;
-        $this->meter_id = $this->selectedDevice->meter_id;
+        $this->name = $this->selectedDevice->name;
+        $this->device_id = $this->selectedDevice->device_id;
         $this->status = $this->selectedDevice->status;
         $this->type = $this->selectedDevice->type;
         $this->price = $this->selectedDevice->price;
-        $this->stock_status = $this->selectedDevice->stock_status;
-        $this->device_id = $this->selectedDevice->id;
+        $this->device_idd = $this->selectedDevice->id;
+        $this->production_date = $this->selectedDevice->production_date;
 
         // return $this->selectedDevic
         Log::alert($this->selectedDevice);
@@ -58,20 +58,19 @@ $showDeviceDetail =  function ($deviceId) {
 
 $updateDevice = function () {
 
-    $device = Device::where('id', '=', $this->device_id)->update([
-        "device_name"=>$this->device_name,
+    $device = Device::where('id', '=', $this->device_idd)->update([
+        "name"=>$this->name,
         "status"=>$this->status,
         "type"=>$this->type,
         "price"=>$this->price,
-        "stock_status"=>$this->stock_status,
+        "production_date"=>$this->production_date,
     ]);
 
     // $this->reset([
-    //     'device_name',
+    //     'name',
     //     'status',
     //     'type',
     //     'price',
-    //     'stock_status',
     // ]);
 
     if ($this->action === "available") {
@@ -136,20 +135,20 @@ $deleteDevice = function ($deviceId) {
         <form class="space-y-6" wire:submit.prevent="updateDevice">
             <h5 class="text-xl font-medium text-gray-900 dark:text-white">Device Details</h5>
             <div class="flex flex-row justify-between">
-                <input type="hidden" wire:model="device_id">
+                <input type="hidden" wire:model="device_idd">
                 <div class="w-1/2">
-                    <label for="device_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Device
+                    <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Device
                         Name</label>
-                    <input type="text" name="device_name" id="device_name" wire:model="device_name"
+                    <input type="text" name="name" id="name" wire:model="name"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                         placeholder="Device Name" required />
                 </div>
                 <div class="w-1/2 ml-4">
-                    <label for="meter_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                        @disabled(true)>Meter ID</label>
-                    <input type="text" name="meter_id" id="meter_id" wire:model="meter_id" disabled @disabled(true)
+                    <label for="device_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                        @disabled(true)>Device ID</label>
+                    <input type="text" name="device_id" id="device_id" wire:model="device_id" disabled @disabled(true)
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                        placeholder="Meter ID" required />
+                        placeholder="Device ID" required />
                 </div>
             </div>
             <div class="flex flex-row justify-between mt-4">
@@ -183,6 +182,15 @@ $deleteDevice = function ($deviceId) {
                     </select>
                 </div>
             </div>
+            <div class="flex flex-row justify-between mt-4">
+                <div class="w-1/3">
+                    <label for="production_date"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Production Date</label>
+                    <input type="date" name="production_date" id="production_date" wire:model="production_date"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                        placeholder="Production Date" required />
+                </div>
+            </div>
 
 
             <div class="flex justify-between">
@@ -206,7 +214,7 @@ $deleteDevice = function ($deviceId) {
                 <tr>
                     <th class="px-4 py-2 border-r">#</th>
                     <th class="px-4 py-2 border-r">Device Name</th>
-                    <th class="px-4 py-2 border-r">Meter ID</th> {{-- New column for Meter ID --}}
+                    <th class="px-4 py-2 border-r">Device ID</th> {{-- New column for Device ID --}}
                     <th class="px-4 py-2 border-r">Price</th>
                     <th class="px-4 py-2 border-r">Date Added</th>
                     <th class="px-4 py-2">Action</th>
@@ -224,8 +232,8 @@ $deleteDevice = function ($deviceId) {
                         {{-- <i class="fad fa-circle"></i> --}}
                         {{-- {!! $qrcode !!} --}}
                     </td>
-                    <td class="border border-l-0 px-4 py-2">{{ $device->device_name }}</td> {{-- Device name --}}
-                    <td class="border border-l-0 px-4 py-2">{{ $device->meter_id }}</td> {{-- Device meter ID --}}
+                    <td class="border border-l-0 px-4 py-2">{{ $device->name }}</td> {{-- Device name --}}
+                    <td class="border border-l-0 px-4 py-2">{{ $device->device_id }}</td> {{-- Device ID --}}
                     <td class="border border-l-0 px-4 py-2">{{ $device->price }}</td> {{-- Device price --}}
                     <td class="border border-l-0 px-4 py-2">
                         @php
@@ -251,7 +259,7 @@ $deleteDevice = function ($deviceId) {
                                 <form wire:submit.prevent="deleteDevice({{ $device->id }})" class="p-6">
                                 <div class="mb-4">
                                     <p class="text-sm font-medium text-gray-900">
-                                        Are you sure you want to delete device: "{{ $device->device_name }}"?
+                                        Are you sure you want to delete device: "{{ $device->name }}"?
                                     </p>
                                 </div>
                                 <div class="mt-6 p-4">

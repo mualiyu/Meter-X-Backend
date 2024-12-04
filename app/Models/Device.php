@@ -11,15 +11,18 @@ class Device extends Model
 
     protected $fillable = [
         'customer_id',
-        'device_name',
-        'meter_id',
+        'name',
+        'device_id',
         'is_online',
+        'production_date',
         'status',
         'type',
         'price',
-        'stock_status',
         'is_linked',
 
+        'meter_no',
+        'meter_type',
+        'service_provider',
         // '',
     ];
 

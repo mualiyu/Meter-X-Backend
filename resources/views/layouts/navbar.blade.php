@@ -3,7 +3,7 @@
 
     <!-- logo -->
     <div class="flex-none w-56 flex flex-row items-center">
-        <strong class="capitalize ml-1 flex-1">MeterX</strong>
+        <strong class="capitalize ml-1 flex-1">{{$system_name}}</strong>
       <img src="{{asset('/img/logo.png')}}" class="w-10 flex-none">
 
       <button id="sliderBtn" class="flex-none text-right text-gray-900 hidden md:block">

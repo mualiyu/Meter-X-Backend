@@ -11,11 +11,11 @@ class ConsumptionHistory extends Model
 
     protected $fillable = [
         'device_id',
-        'date',
         'voltage',
         'current',
-        'power_consumed',
-        'hours_with_power',
+        'power',
+        'is_power_active', //I.e., if there's power in the 🏡 (Nepa or Grid)
+        'date',
         'time'
     ];
 

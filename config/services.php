@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    'paystack' => [
+        'public_key' => "pk_test_73d2a4133861bccbd58709b63800b52246ad96bb",
+        'secret_key' => "sk_test_235dc73923b084d653aec711de714b44c095908f",
+    ],
+
 ];

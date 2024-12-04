@@ -14,15 +14,22 @@ return new class extends Migration
         Schema::create('devices', function (Blueprint $table) {
             $table->id();
             $table->foreignId('customer_id')->nullable();
-            $table->string('device_name');
-            $table->string('meter_id')->unique();
+            $table->string('name');
+            $table->string('device_id')->unique();
+            $table->string('production_date')->nullable();
             $table->string('is_online')->nullable()->default('0');
             $table->enum('status', ['in_stock', 'purchased', 'damaged']);
             $table->enum('type', ['household', 'industrial']);
             $table->decimal('price', 8, 2)->nullable();
-            $table->enum('stock_status', ['available', 'sold'])->default('available');
             $table->enum('is_linked', [1, 0])->default(0);
+
+
+            $table->string('meter_no')->nullable();
+            $table->string('meter_type')->nullable();
+            $table->string('service_provider')->nullable();
             $table->timestamps();
+
+            // $table->enum('stock_status', ['available', 'sold'])->default('available');
         });
     }
 

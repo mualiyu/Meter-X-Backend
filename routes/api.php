@@ -8,7 +8,6 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 
-
 Route::prefix('customers')->group(function () {
     Route::prefix('v1')->group(function () {
 
@@ -22,6 +21,20 @@ Route::prefix('customers')->group(function () {
             Route::get('/', '\App\Http\Controllers\Api\AuthController@getProfile');
             Route::put('/update', '\App\Http\Controllers\Api\AuthController@updateProfile');
         });
+
+        // Electricity Bills
+        Route::prefix('electricity-bill')->middleware('auth:sanctum')->group(function () {
+            Route::post('/get-electricity-companies', '\App\Http\Controllers\Api\ElectricityController@getElectricityCompanies');
+            Route::post('/verify-meter', '\App\Http\Controllers\Api\ElectricityController@verify_meter');
+            Route::post('/request-purchase', '\App\Http\Controllers\Api\ElectricityController@request_purchase');
+            Route::post('/verify-payment', '\App\Http\Controllers\Api\ElectricityController@verify_payment');
+
+            Route::post('/meter-purchase-unit', '\App\Http\Controllers\Api\ElectricityController@purchase_payment');
+            Route::post('verify-transaction', '\App\Http\Controllers\Api\ElectricityController@verify_transaction');
+            // Route::post('/pay', '\App\Http\Controllers\Api\ElectricityController@updateProfile');
+        });
+
+
 
         Route::post('/testing', function () {
             return response()->json([

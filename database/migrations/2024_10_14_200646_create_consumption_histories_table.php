@@ -17,8 +17,8 @@ return new class extends Migration
             $table->date('date');
             $table->decimal('voltage', 8, 2);
             $table->decimal('current', 8, 2);
-            $table->decimal('power_consumed', 8, 2);
-            $table->integer('hours_with_power');
+            $table->decimal('power', 8, 2);
+            $table->integer('is_power_active');
             $table->time('time');
             $table->timestamps();
         });
