@@ -45,6 +45,21 @@ class Customer extends Authenticatable
         return $this->hasMany(Device::class);
     }
 
+    public function airtime_history()
+    {
+        return $this->hasMany(Airtime::class, 'customer_id');
+    }
+
+    public function data_history()
+    {
+        return $this->hasMany(Data::class, 'customer_id');
+    }
+
+    public function electricity_history()
+    {
+        return $this->hasMany(Electricity::class, 'customer_id');
+    }
+
     public static function getLatestCustomers($limit = 4)
     {
         return self::orderBy('created_at', 'desc')->take($limit)->get();

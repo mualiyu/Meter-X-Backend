@@ -76,8 +76,6 @@ class Payment extends Model
     {
         $paystack = new Paystack(config('services.paystack.secret_key'));
 
-        // throw new $this->reference;
-
         try {
             $response = $paystack->transaction->verify([
                 'reference' => $this->reference

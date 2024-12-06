@@ -19,6 +19,7 @@ return new class extends Migration
             $table->decimal('amount', 8, 2)->nullable();
             $table->enum('status', [1, 0])->default(0);
             $table->string('ref_id')->nullable();
+            $table->json('data')->nullable();
             $table->timestamps();
         });
     }

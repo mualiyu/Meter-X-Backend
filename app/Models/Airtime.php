@@ -16,7 +16,12 @@ class Airtime extends Model
         'amount',
         'status',
         'ref_id',
+        'data',
         // '',
+    ];
+
+    protected $casts = [
+        'data' => 'array',
     ];
 
     public function customer()

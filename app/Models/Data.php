@@ -12,12 +12,18 @@ class Data extends Model
     protected $fillable = [
         'customer_id',
         'service_provider',
+        'variation_code',
         'phone',
         'amount',
         'status',
         'data_unit',
         'ref_id',
+        'data',
         // '',
+    ];
+
+    protected $casts = [
+        'data' => 'array',
     ];
 
     public function customer()

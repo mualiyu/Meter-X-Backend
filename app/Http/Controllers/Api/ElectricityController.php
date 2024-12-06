@@ -151,6 +151,12 @@ class ElectricityController extends Controller
         $electricity = Electricity::where('ref_id', $request->ref_id)->firstOrFail();
 
         if ($electricity) {
+            // test
+            // $vtpassService = new VTPass();
+            // $result = $vtpassService->meter_purchase($electricity->ref_id, $electricity->service_provider, $electricity->meter_no, $electricity->meter_type, $electricity->amount, $electricity->phone);
+            // return $result;
+            // End test
+
             $payment = $electricity->payment;
             if ($payment->verifyPaystackPayment()) {
                 $e = Electricity::where('ref_id', $request->ref_id)->with('payment')->with('customer')->firstOrFail();
@@ -160,6 +166,9 @@ class ElectricityController extends Controller
 
                 if ($result) {
                     if ($result['status']) {
+                        $e->data = $result['data'];
+                        $e->save();
+
                         return response()->json([
                             "status" => true,
                             "payment_status" => true,
@@ -167,6 +176,9 @@ class ElectricityController extends Controller
                             "data" => $result['data']
                         ], 200);
                     } else {
+                        $e->data = $result['error'];
+                        $e->save();
+
                         return response()->json([
                             "status" => false,
                             "payment_status" => true,
@@ -271,5 +283,31 @@ class ElectricityController extends Controller
                 "message" => "Failed to get Token",
             ], 422);
         }
+    }
+
+    public function history(Request $request)
+    {
+        $customer = $request->user();
+
+        if ($customer) {
+            if (count($customer->electricity_history)>0) {
+                return response()->json([
+                    "status" => true,
+                    "data" => $customer->electricity_history,
+                    "message" => "Successful response",
+                ], 200);
+            }else{
+                return response()->json([
+                    "status" => false,
+                    "message" => "Sorry you don't have any previously purchased electricity unit"
+                ], 422);
+            }
+        }else{
+            return response()->json([
+                "status" => false,
+                "message" => "No data/customer found, try again later!"
+            ], 422);
+        }
+
     }
 }

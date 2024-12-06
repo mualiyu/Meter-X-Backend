@@ -15,11 +15,13 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('customer_id');
             $table->string('service_provider');
+            $table->string('variation_code')->nullable();
             $table->string('phone');
             $table->decimal('amount', 8, 2)->nullable();
             $table->decimal('data_unit', 8, 2)->nullable();
             $table->enum('status', [1, 0])->default(0);
             $table->string('ref_id')->nullable();
+            $table->json('data')->nullable();
             $table->timestamps();
         });
     }

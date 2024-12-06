@@ -31,12 +31,30 @@ Route::prefix('customers')->group(function () {
             Route::post('/request-purchase', '\App\Http\Controllers\Api\ElectricityController@request_purchase');
             Route::post('/verify-payment', '\App\Http\Controllers\Api\ElectricityController@verify_payment');
 
-            Route::post('/meter-purchase-unit', '\App\Http\Controllers\Api\ElectricityController@purchase_payment');
+            Route::post('/history', '\App\Http\Controllers\Api\ElectricityController@history');
+
             Route::post('verify-transaction', '\App\Http\Controllers\Api\ElectricityController@verify_transaction');
+            Route::post('/meter-purchase-unit', '\App\Http\Controllers\Api\ElectricityController@purchase_payment');
             // Route::post('/pay', '\App\Http\Controllers\Api\ElectricityController@updateProfile');
         });
 
+        Route::prefix('airtime-vtu')->middleware('auth:sanctum')->group(function () {
+            Route::post('/get-service-providers', '\App\Http\Controllers\Api\AirtimeController@getServiceProvider');
+            Route::post('/request-airtime-purchase', '\App\Http\Controllers\Api\AirtimeController@request_airtime_purchase');
+            Route::post('/verify-airtime-payment', '\App\Http\Controllers\Api\AirtimeController@verify_airtime_payment');
 
+            Route::post('/history', '\App\Http\Controllers\Api\AirtimeController@history');
+        });
+
+        Route::prefix('data-subscription')->middleware('auth:sanctum')->group(function () {
+            Route::post('/get-service-providers', '\App\Http\Controllers\Api\DataController@getServiceProvider');
+            Route::post('/get-variations', '\App\Http\Controllers\Api\DataController@get_variations');
+            Route::post('/request-data-purchase', '\App\Http\Controllers\Api\DataController@request_data_purchase');
+            Route::post('/verify-data-payment', '\App\Http\Controllers\Api\DataController@verify_data_payment');
+
+
+            Route::post('/history', '\App\Http\Controllers\Api\DataController@history');
+        });
 
         Route::post('/testing', function () {
             return response()->json([
