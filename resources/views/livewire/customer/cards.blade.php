@@ -74,12 +74,11 @@ $updateActionState = function ($action) {
                 <div class="px-3 py-2 rounded bg-primary-600 text-black mr-3">
                     <i class="fad fa-plus text-lg"></i>
                 </div>
-                <h5 class="uppercase text-xs tracking-wider font-extrabold"><span style="color: green;">Add New
-                        Device</span></h5>
-
+                <h5 class="uppercase text-xs tracking-wider font-extrabold"><span style="color: green;">Add New Customer</span></h5>
             </div>
         </div>
         <!-- status -->
+
     </div>
 
 
