@@ -83,7 +83,10 @@ class Payment extends Model
             ]);
 
             if ($response) {
+
                 # code...
+                return $response;
+
                 if ($response['data']['status'] === 'success') {
                     $this->update([
                         'status' => 'completed',
