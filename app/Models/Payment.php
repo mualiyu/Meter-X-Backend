@@ -85,9 +85,9 @@ class Payment extends Model
             if ($response) {
 
                 # code...
-                return $response;
+                // return $response;
 
-                if ($response['data']['status'] === 'success') {
+                if ($response->data->status === 'success') {
                     $this->update([
                         'status' => 'completed',
                         'payment_data' => array_merge(
