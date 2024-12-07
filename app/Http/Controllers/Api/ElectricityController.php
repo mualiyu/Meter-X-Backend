@@ -163,7 +163,7 @@ class ElectricityController extends Controller
             $payment->trxref = $request->trxref;
             $payment->save();
 
-            return $payment->verifyPaystackPayment();
+            // return $payment->verifyPaystackPayment();
 
             if ($payment->verifyPaystackPayment()) {
                 $e = Electricity::where('ref_id', $request->ref_id)->with('payment')->with('customer')->firstOrFail();

@@ -92,7 +92,7 @@ class Payment extends Model
                         'status' => 'completed',
                         'payment_data' => array_merge(
                             $this->payment_data ?? [],
-                            ['verification' => $response['data']]
+                            ['verification' => $response->data]
                         )
                     ]);
                     // Update the related service status
