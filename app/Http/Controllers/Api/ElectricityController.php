@@ -171,7 +171,7 @@ class ElectricityController extends Controller
                 $vtpassService = new VTPass();
                 $result = $vtpassService->meter_purchase($e->ref_id, $e->service_provider, $e->meter_no, $e->meter_type, $e->amount, $e->phone);
 
-                return $result;
+                // return $result;
                 if ($result) {
                     if ($result['status']) {
                         $e->data = $result['data'];
