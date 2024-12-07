@@ -140,6 +140,7 @@ class ElectricityController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'ref_id' => 'required',
+            'trxref' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -158,6 +159,9 @@ class ElectricityController extends Controller
             // End test
 
             $payment = $electricity->payment;
+
+            $payment->trxref = $request->trxref;
+            $payment->save();
             if ($payment->verifyPaystackPayment()) {
                 $e = Electricity::where('ref_id', $request->ref_id)->with('payment')->with('customer')->firstOrFail();
 

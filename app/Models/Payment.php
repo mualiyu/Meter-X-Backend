@@ -22,6 +22,7 @@ class Payment extends Model
         'paystack_reference',
         'paystack_payment_url',
         'payment_data',
+        'trxref',
     ];
 
     protected $casts = [
@@ -78,7 +79,7 @@ class Payment extends Model
 
         try {
             $response = $paystack->transaction->verify([
-                'reference' => $this->reference
+                'reference' => $this->trxref
             ]);
 
             if ($response) {
@@ -91,7 +92,6 @@ class Payment extends Model
                             ['verification' => $response['data']]
                         )
                     ]);
-
                     // Update the related service status
                     $this->payable->update(['status' => '1']);
 

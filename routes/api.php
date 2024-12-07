@@ -7,6 +7,9 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
+Route::get('/test_mqtt', '\App\Http\Controllers\DeviceController@test_mqtt');
+Route::post('/sensor/{device_id}/data', '\App\Http\Controllers\DeviceController@get_device_data');
+
 
 Route::prefix('customers')->group(function () {
     Route::prefix('v1')->group(function () {

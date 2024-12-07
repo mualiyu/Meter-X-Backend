@@ -11,6 +11,7 @@
         "laravel/tinker": "^2.9",
         "livewire/livewire": "^3.4",
         "livewire/volt": "^1.0",
+        "php-mqtt/laravel-client": "^1.5",
         "simplesoftwareio/simple-qrcode": "^4.2",
         "yabacon/paystack-php": "^2.2"
     },

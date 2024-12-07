@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->string('paystack_reference')->nullable();
             $table->string('paystack_payment_url')->nullable();
+            $table->string('trxref')->nullable();
             $table->json('payment_data')->nullable();
             $table->timestamps();
         });
